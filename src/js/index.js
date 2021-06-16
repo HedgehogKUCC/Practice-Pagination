@@ -1,6 +1,10 @@
+// 參考來源
+// https://shhhhh-ycy.medium.com/pagination-%E5%88%86%E9%A0%81%E5%B7%A5%E5%85%B7-d04e3f0c23b0
+// https://codepen.io/chingyuan/pen/OJVyQRQ?editors=0010
+
 const PAGINATION = {
     nowPage: 1,
-    totalPage: 5,
+    totalPage: 30,
 };
 
 const paginationGroup = document.getElementById('pagination__group');
@@ -10,9 +14,8 @@ init();
 function init() {
     PAGINATION.nowPage = 1;
     if (PAGINATION.totalPage > 5) {
-        // overFivePageRender();
-        // overFivePageListener();
-        alert('Bigger than five');
+        overFivePageRender();
+        overFivePageListener();
     } else {
         pageRender();
         pageListener();
@@ -34,23 +37,6 @@ function pageRender() {
     listRender(ary);
 }
 
-function listRender(ary) {
-    paginationGroup.innerHTML = '';
-    const FRAGMENT = document.createDocumentFragment();
-    ary.forEach((el) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        li.setAttribute('data-val', el.val);
-        li.setAttribute('class', 'pagination__item ' + el.class);
-        a.setAttribute('href', 'javascript:;');
-        // a.setAttribute('href', '/coupon.php?usablePage=' + el.val);
-        a.innerText = el.val > 0 ? el.val : el.val === -1 ? '...' : '';
-        li.appendChild(a);
-        FRAGMENT.appendChild(li);
-    });
-    paginationGroup.appendChild(FRAGMENT);
-}
-
 function pageListener() {
     document.querySelectorAll('.pagination__item').forEach((el) => {
         el.addEventListener('click', () => {
@@ -61,4 +47,109 @@ function pageListener() {
             }
         });
     });
+}
+
+function overFivePageRender() {
+    const { totalPage } = PAGINATION;
+    const { nowPage } = PAGINATION;
+    const pageStatus = overFivePageJudgePageStatus(nowPage, totalPage);
+    const ary = overFivePageGenerateData(pageStatus, nowPage, totalPage);
+    listRender(ary);
+}
+
+function overFivePageJudgePageStatus(nowPage, totalPage) {
+    return nowPage === 1 ? 'first' : nowPage <= totalPage / 2 ? 'front' : nowPage !== totalPage ? 'back' : 'last';
+}
+
+function overFivePageGenerateData(pageStatus, nowPage, totalPage) {
+    const MAP = {
+        first: [
+            { val: -2, class: 'pre unclick' },
+            { val: nowPage, class: 'active' },
+            { val: nowPage + 1, class: '' },
+            { val: nowPage + 2, class: '' },
+            { val: -1, class: 'unclick' },
+            { val: totalPage, class: '' },
+            { val: -3, class: 'next' },
+        ],
+        front: [
+            { val: -2, class: 'pre' },
+            { val: nowPage - 1, class: '' },
+            { val: nowPage, class: 'active' },
+            { val: nowPage + 1, class: '' },
+            { val: -1, class: 'unclick' },
+            { val: totalPage, class: '' },
+            { val: -3, class: 'next' },
+        ],
+        back: [
+            { val: -2, class: 'pre' },
+            { val: 1, class: '' },
+            { val: -1, class: 'unclick' },
+            { val: nowPage - 1, class: '' },
+            { val: nowPage, class: 'active' },
+            { val: nowPage + 1, class: '' },
+            { val: -3, class: 'next' },
+        ],
+        last: [
+            { val: -2, class: 'pre' },
+            { val: 1, class: '' },
+            { val: -1, class: 'unclick' },
+            { val: nowPage - 2, class: '' },
+            { val: nowPage - 1, class: '' },
+            { val: nowPage, class: 'active' },
+            { val: -3, class: 'next unclick' },
+        ],
+    };
+    return MAP[pageStatus];
+}
+
+function listRender(ary) {
+    paginationGroup.innerHTML = '';
+    const FRAGMENT = document.createDocumentFragment();
+    ary.forEach((el) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        li.setAttribute('data-val', el.val);
+        li.setAttribute('class', 'pagination__item ' + el.class);
+        a.setAttribute('href', 'javascript:;');
+        // a.setAttribute('href', '/coupon.php?usablePage=' + el.val);
+        a.innerText = el.val > 0 ? el.val : el.val === -1 ? '...' : el.val === -2 ? '<<' : el.val === -3 ? '>>' : '';
+        li.appendChild(a);
+        FRAGMENT.appendChild(li);
+    });
+    paginationGroup.appendChild(FRAGMENT);
+}
+
+function overFivePageListener() {
+    preBtnSet();
+    nextBtnSet();
+    document.querySelectorAll('.pagination__item').forEach((el) => {
+        el.addEventListener('click', () => {
+            if (el.dataset.val > 0) {
+                overFivePageChange(el.dataset.val);
+            }
+        });
+    });
+}
+
+function preBtnSet() {
+    document.querySelector('#pagination__group .pre').addEventListener('click', function () {
+        if (this.classList.value.indexOf('unclick') === -1) {
+            overFivePageChange(PAGINATION.nowPage - 1);
+        }
+    });
+}
+
+function nextBtnSet() {
+    document.querySelector('#pagination__group .next').addEventListener('click', function () {
+        if (this.classList.value.indexOf('unclick') === -1) {
+            overFivePageChange(PAGINATION.nowPage + 1);
+        }
+    });
+}
+
+function overFivePageChange(num) {
+    PAGINATION.nowPage = +num;
+    overFivePageRender();
+    overFivePageListener();
 }
