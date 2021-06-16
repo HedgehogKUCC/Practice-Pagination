@@ -23,8 +23,7 @@ function init() {
 }
 
 function pageRender() {
-    const { totalPage } = PAGINATION;
-    const { nowPage } = PAGINATION;
+    const { totalPage, nowPage } = PAGINATION;
     const ary = [];
     let num = 1;
 
@@ -50,8 +49,7 @@ function pageListener() {
 }
 
 function overFivePageRender() {
-    const { totalPage } = PAGINATION;
-    const { nowPage } = PAGINATION;
+    const { totalPage, nowPage } = PAGINATION;
     const pageStatus = overFivePageJudgePageStatus(nowPage, totalPage);
     const ary = overFivePageGenerateData(pageStatus, nowPage, totalPage);
     listRender(ary);
