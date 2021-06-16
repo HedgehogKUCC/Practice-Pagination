@@ -108,7 +108,7 @@ function listRender(ary) {
         const li = document.createElement('li');
         const a = document.createElement('a');
         li.setAttribute('data-val', el.val);
-        li.setAttribute('class', 'pagination__item ' + el.class);
+        li.setAttribute('class', `pagination__item ${el.class}`);
         a.setAttribute('href', 'javascript:;');
         // a.setAttribute('href', '/coupon.php?usablePage=' + el.val);
         a.innerText = el.val > 0 ? el.val : el.val === -1 ? '...' : el.val === -2 ? '<<' : el.val === -3 ? '>>' : '';
