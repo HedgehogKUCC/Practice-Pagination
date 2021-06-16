@@ -122,11 +122,11 @@ function overFivePageListener() {
     preBtnSet();
     nextBtnSet();
     document.querySelectorAll('.pagination__item').forEach((el) => {
-        el.addEventListener('click', () => {
-            if (el.dataset.val > 0) {
+        if (el.dataset.val > 0) {
+            el.addEventListener('click', () => {
                 overFivePageChange(el.dataset.val);
-            }
-        });
+            });
+        }
     });
 }
 
