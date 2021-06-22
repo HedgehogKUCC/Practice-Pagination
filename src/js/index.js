@@ -2,14 +2,38 @@
 // https://shhhhh-ycy.medium.com/pagination-%E5%88%86%E9%A0%81%E5%B7%A5%E5%85%B7-d04e3f0c23b0
 // https://codepen.io/chingyuan/pen/OJVyQRQ?editors=0010
 
-const PAGINATION = {
-    nowPage: 1,
-    totalPage: 30,
-};
-
+const INPUT = document.querySelector('#input_pageTotal input');
+const BITTON = document.querySelector('#input_pageTotal button');
 const paginationGroup = document.getElementById('pagination__group');
 
-init();
+const PAGINATION = {
+    nowPage: 1,
+    totalPage: 0,
+};
+
+INPUT.addEventListener('input', function (e) {
+    checkInputField(e.target);
+});
+
+INPUT.addEventListener('keypress', function (e) {
+    if (!(e.keyCode === 13)) { return; }
+    if (checkInputField(e.target)) { init(); }
+});
+
+BITTON.addEventListener('click', () => {
+    init();
+});
+
+function checkInputField(element) {
+    const IN_NUM = +element.value.trim();
+    if (!(IN_NUM >= 1 && IN_NUM <= 100)) {
+        element.value = '';
+        paginationGroup.innerHTML = '';
+        return false;
+    }
+    PAGINATION.totalPage = IN_NUM;
+    return true;
+}
 
 function init() {
     PAGINATION.nowPage = 1;

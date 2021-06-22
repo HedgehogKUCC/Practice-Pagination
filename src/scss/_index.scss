@@ -11,13 +11,55 @@ $fontColor: (
     default: #444
 );
 
+$buttonColor: (
+    default: #2d82d5,
+    defaultBG: transparent,
+    hoverColor: #fff
+);
+
 .container {
     width: 960px;
-    margin: 0 auto;
+    margin: 100px auto 0;
+}
+
+.input_pageTotal {
+    margin-bottom: 30px;
+    text-align: center;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 28px;
+    }
+
+    input[type="text"],
+    button[type="button"] {
+        padding: 8px 16px;
+        font-size: 24px;
+    }
+
+    input[type="text"] {
+        width: 50px;
+        text-align: center;
+    }
+
+    button[type="button"] {
+        cursor: pointer;
+        border: 2px solid map-get($buttonColor, default);
+        background: map-get($buttonColor, defaultBG);
+        color: map-get($buttonColor, default);
+        font-weight: bold;
+        border-radius: 5px;
+        outline: none;
+
+        &:hover {
+            background: map-get($buttonColor, default);
+            color: map-get($buttonColor, hoverColor);
+        }
+    }
 }
 
 .customized-pagination {
-    margin-top: 100px;
     color: map-get($fontColor, default);
 
     ul {
